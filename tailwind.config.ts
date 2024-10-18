@@ -12,6 +12,12 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      // Redefine the maxHeight utility to include 'viewpoint height' units
+      maxHeight: {
+        '85': '85vh',
+        '90': '90vh',
+        '95': '95vh',
+      },
     },
   },
   plugins: [],

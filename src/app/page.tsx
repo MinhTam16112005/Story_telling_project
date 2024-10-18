@@ -1,100 +1,82 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [username, setUsername] = useState<string>("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const user = searchParams.get("username");
+    if (user) {
+      setUsername(user);
+    }
+  }, [searchParams]);
+
+  const handleSignOut = () => {
+    setUsername("");
+    router.push("/login");
+  };
+
+  return (
+    <div className="min-h-screen p-8 font-[family-name:var(--font-geist-sans)] bg-white text-black">
+      <header className="mb-16">
+        <div className="text-right mb-4">
+          {!username ? (
+            <>
+              <Link href="/login">
+                <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-4">
+                  Log in
+                </button>
+              </Link>
+              <Link href="/signup">
+                <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                  Sign up
+                </button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <span className="mr-4 text-xl">Welcome, {username}!</span>
+              <button
+                onClick={handleSignOut}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Sign out
+              </button>
+            </>
+          )}
+        </div>
+        <h1 className="text-4xl font-bold text-center">Welcome to the world of Stories</h1>
+      </header>
+
+      <main>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {[1, 2, 3].map((game) => (
+            <Link href={`/game/${game}`} key={game} className="block">
+              <div className="relative transition-transform duration-300 transform hover:scale-105">
+                <Image
+                  src={`/game${game}.jpg`} // Make sure these images exist
+                  alt={`Game ${game}`}
+                  width={400} // Set the same width and height as MainPage
+                  height={400} // Set height as in MainPage
+                  className="w-full h-64 object-cover" // Ensuring it matches the format of MainPage
+                />
+                <p className="text-center text-xl font-bold text-white bg-black bg-opacity-60 p-2 rounded-lg mx-4 mt-2">
+                  Game {game}
+                </p>
+              </div>
+            </Link>
+          ))}
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      <footer className="mt-16 text-center text-gray-600">
+        <p>&copy; 2023 Story World. All rights reserved.</p>
       </footer>
     </div>
   );
